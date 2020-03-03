@@ -7,11 +7,13 @@ import (
 
 type Endpoints struct {
     GetHealthCheckEndpoint endpoint.Endpoint
+    GetUppercaseEndpoint endpoint.Endpoint
 }
 
 func makeServerEndpoints(s Service) Endpoints {
     return Endpoints{
         GetHealthCheckEndpoint: makeHealthCheckEndpoint(s),
+        GetUppercaseEndpoint: makeUppercaseEndpoint(s),
     }
 }
 func makeHealthCheckEndpoint(svc Service) endpoint.Endpoint {
@@ -19,5 +21,12 @@ func makeHealthCheckEndpoint(svc Service) endpoint.Endpoint {
         status, _ := svc.HealthCheck()
 
         return healthCheckResponse{status}, nil
+    }
+}
+func makeUppercaseEndpoint(svc Service) endpoint.Endpoint {
+    return func(ctx context.Context, request interface{}) (interface{}, error) {
+        result, _ := svc.Uppercase("test")
+
+        return uppercaseResponse{result}, nil
     }
 }

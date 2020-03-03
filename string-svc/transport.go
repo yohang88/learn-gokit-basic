@@ -27,6 +27,13 @@ func MakeHTTPHandler(s Service, logger log.Logger) http.Handler {
         options...,
     ))
 
+    r.Methods("GET").Path("/uppercase").Handler(httptransport.NewServer(
+        e.GetUppercaseEndpoint,
+        decodeUppercaseRequest,
+        encodeResponse,
+        options...,
+    ))
+
     return r
 }
 
@@ -38,6 +45,17 @@ type healthCheckResponse struct {
 
 func decodeHealthCheckRequest(_ context.Context, r *http.Request) (interface{}, error) {
     var req healthCheckRequest
+    return req, nil
+}
+
+type uppercaseRequest struct{}
+
+type uppercaseResponse struct {
+    Result string `json:"result"`
+}
+
+func decodeUppercaseRequest(_ context.Context, r *http.Request) (interface{}, error) {
+    var req uppercaseRequest
     return req, nil
 }
 

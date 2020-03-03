@@ -18,6 +18,14 @@ type loggingMiddleware struct {
     logger log.Logger
 }
 
+func (mw loggingMiddleware) Uppercase(input string) (s string, err error) {
+    defer func(begin time.Time) {
+        mw.logger.Log("method", "GetUppercase", "time", time.Since(begin), "err", err)
+    }(time.Now())
+
+    return mw.next.Uppercase(input)
+}
+
 func (mw loggingMiddleware) HealthCheck() (s string, err error) {
     defer func(begin time.Time) {
         mw.logger.Log("method", "GetHealthCheck", "time", time.Since(begin), "err", err)
