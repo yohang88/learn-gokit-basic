@@ -25,7 +25,9 @@ func makeHealthCheckEndpoint(svc Service) endpoint.Endpoint {
 }
 func makeUppercaseEndpoint(svc Service) endpoint.Endpoint {
     return func(ctx context.Context, request interface{}) (interface{}, error) {
-        result, _ := svc.Uppercase("test")
+        req := request.(uppercaseRequest)
+
+        result, _ := svc.Uppercase(req.Input)
 
         return uppercaseResponse{result}, nil
     }
